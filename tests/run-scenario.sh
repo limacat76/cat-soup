@@ -4,7 +4,9 @@
 # Usage: run-scenario.sh <dest> <scenario> "<typed command>"            first call; starts a session
 #        run-scenario.sh <dest> <scenario> --resume <session_id> "<answer>"   continues that session
 #
-# <dest> is a lab built by make-lab.sh; <scenario> names the run folder tests/runs/<scenario>-<date>/.
+# <dest> is a lab built by make-lab.sh; <scenario> names the run folder
+# <runs>/<scenario>-<date>/, with <runs> = $CAT_SOUP_RUNS, else ${TMPDIR:-/tmp}/cat-soup-runs (the OS temporary
+# directory, so no log or verdict lands in the repository).
 # Every call writes call-<n>.jsonl (stream-json log) and call-<n>.err there, and prints the session_id,
 # turns, cost and the assistant's last text. The skills load through --plugin-dir <this checkout>/plugin.
 # Environment: MAX_TURNS (default 30) and CALL_TIMEOUT in seconds (default 900) apply to every call.
@@ -14,7 +16,8 @@ set -euo pipefail
 
 HERE=$(cd "$(dirname "$0")" && pwd -P)
 CAT_SOUP=$(cd "$HERE/.." && pwd -P)
-RUNS="$HERE/runs"
+RUNS=${CAT_SOUP_RUNS:-${TMPDIR:-/tmp}/cat-soup-runs}   # outside the checkout: runs are never committed
+RUNS=${RUNS%/}
 MAX_TURNS=${MAX_TURNS:-30}
 CALL_TIMEOUT=${CALL_TIMEOUT:-900}
 
