@@ -1,0 +1,15 @@
+[project]
+name = "fizzbuzz"
+version = "0.1.0"
+description = "FizzBuzz, as a library and a command line tool."
+requires-python = ">=3.11"
+dependencies = []
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[tool.pytest.ini_options]
+markers = ["slow: long-running checks, run with `make test-all`"]
+addopts = "-m 'not slow'"
+testpaths = ["tests"]
+pythonpath = ["."]
