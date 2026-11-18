@@ -1,0 +1,5 @@
+Thanks for the patch. Two comments:
+
+1. Please rename the sheet from `fizzbuzz` to `FizzBuzz`; that is how the spreadsheet tools in our team name it.
+
+2. Please also add an `--xlsx PATH` option to the command line (`python -m fizzbuzz 15 --xlsx out.xlsx`), so the export can be used without writing Python.
