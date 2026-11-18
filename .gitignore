@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+.pytest_cache/
+eval_results/
+.DS_Store
+
+# scenario logs and verdicts are local evidence, not history
+tests/runs/

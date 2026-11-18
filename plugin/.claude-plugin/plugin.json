@@ -1,0 +1,5 @@
+{
+  "name": "cat",
+  "version": "0.1.0",
+  "description": "cat-soup: turn a design document into a plan, implement it step by step in a git worktree, review it, and close it."
+}
