@@ -68,9 +68,20 @@ while IFS= read -r f; do
 done < <(find "$PLUGIN" -type f | sort)
 group_end "no stray files"
 
-# 6. plan template: markers in SKILL.md and, from stage B, the plans printed by make-lab.sh --print-plan.
-# Until make-lab.sh exists, no plan is passed and only the SKILL.md markers are checked.
-python3 -I tests/check-template.py "$TEMPLATE_SKILL" || fail "tests/check-template.py $TEMPLATE_SKILL"
+# 6. plan template: markers in SKILL.md and the plans printed by make-lab.sh --print-plan (each state).
+# Stage E adds make-drift.sh --print-plan here.
+plan_dir=$(mktemp -d)
+trap 'rm -rf "$plan_dir"' EXIT
+plans=()
+for state in clean step1-committed done; do
+  plan="$plan_dir/make-lab-$state.md"
+  if bash tests/fizz-buzz/make-lab.sh --print-plan "$state" > "$plan" 2> "$plan.err"; then
+    plans+=("$plan")
+  else
+    fail "tests/fizz-buzz/make-lab.sh --print-plan $state failed: $(cat "$plan.err")"
+  fi
+done
+python3 -I tests/check-template.py "$TEMPLATE_SKILL" "${plans[@]}" || fail "tests/check-template.py $TEMPLATE_SKILL"
 group_end "plan template"
 
 echo "check-files: all groups passed"
