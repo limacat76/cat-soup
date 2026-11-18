@@ -147,7 +147,7 @@ git_at () {  # git_at <iso date> <git args...>: a commit date, so the history is
   GIT_AUTHOR_DATE=$when GIT_COMMITTER_DATE=$when git "$@"
 }
 
-mkdir -p "$DEST/Plans/$REPO" "$DEST/Projects-Worktrees/$REPO" "$DEST/bin" "$DEST/.claude"
+mkdir -p "$DEST/Plans/$REPO" "$DEST/Projects-Worktrees/$REPO" "$DEST/bin"
 cp -R "$HERE/designs" "$DEST/designs"
 cp "$HERE/LAB.md" "$DEST/LAB.md"
 printf '@LAB.md\n' > "$DEST/CLAUDE.md"
@@ -158,13 +158,15 @@ for forge in gh glab; do
   chmod +x "$DEST/bin/$forge"
 done
 
-# the lab's permission allow list (Roles in testing.md)
-jq -n --arg dest "$DEST" '{permissions: {allow: [
-    ("Read(//" + ($dest | ltrimstr("/")) + "/**)"),
-    ("Edit(//" + ($dest | ltrimstr("/")) + "/**)"),
-    ("Write(//" + ($dest | ltrimstr("/")) + "/**)"),
-    "Bash(git:*)", "Bash(uv:*)", "Bash(make:*)", "Bash(ls:*)", "Bash(cat:*)",
-    "Bash(mkdir:*)", "Bash(grep:*)", "Bash(test:*)", "Agent"]}}' > "$DEST/.claude/settings.json"
+# the lab's permission rules for the headless executor, one per line, for `claude -p --allowed-tools`.
+# The headless session ignores <dest>/.claude/settings.json (the workspace is not trusted), so this file is the
+# only route; run-scenario.sh reads it. Probe: Architecture/cat-soup/003-Design_0.1/Side-Tests/permission-probe.md
+dest_rel=${DEST#/}
+{
+  printf '%s\n' "Read(//$dest_rel/**)" "Edit(//$dest_rel/**)" "Write(//$dest_rel/**)"
+  printf '%s\n' "Bash(git:*)" "Bash(uv:*)" "Bash(make:*)" "Bash(ls:*)" "Bash(cat:*)" "Bash(mkdir:*)" \
+    "Bash(grep:*)" "Bash(test:*)" "Agent"
+} > "$DEST/allowed-tools.txt"
 
 cp -R "$HERE/template" "$LAB_REPO"
 git -C "$LAB_REPO" init -q -b "$BASE"
