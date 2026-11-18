@@ -3,7 +3,7 @@
 #
 # Usage: check-run.sh <run dir> <skill>     <skill> is the skill the first call typed, e.g. cat-open-plan
 #
-# <run dir> is tests/runs/<scenario>-<date>/, made by run-scenario.sh. Prints, per call, every tool call
+# <run dir> is <runs>/<scenario>-<date>/ in the OS temporary directory, made by run-scenario.sh (it prints the path). Prints, per call, every tool call
 # (name and truncated arguments), denied permissions and the assistant's text; then the checks, one line each
 # (PASS, FAIL or ENV for an environment failure). Exit 1 when a check fails.
 # Every run asserts the evidence line: the init event lists cat:<skill>, and the typed command appears as the
