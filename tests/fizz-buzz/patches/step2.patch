@@ -1,0 +1,11 @@
+--- a/README.md
++++ b/README.md
+@@ -2,6 +2,8 @@
+ 
+ FizzBuzz as a library (`fizzbuzz.fizzbuzz`, `fizzbuzz.run`) and a command line tool (`python -m fizzbuzz 15`).
+ 
++Excel export: `fizzbuzz.export_xlsx(15, "fizzbuzz.xlsx")` writes 1..15 to sheet `fizzbuzz` with columns `n`, `output`. It raises `FileExistsError` instead of overwriting an existing file.
++
+ ## Development
+ 
+     make setup     # uv sync: creates .venv with the dev dependencies
